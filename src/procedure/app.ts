@@ -14,15 +14,24 @@ import { ProcedureHydrator } from "./domain/procedure.hydrator"
 import { ProcedureCommandApi } from "./app/command/command.api"
 import { ProcedureChangeEvents } from "./domain/procedure.changeEvents"
 import { EventBroker } from "../packages/eventSourcing/eventBroker"
+import { ExternalEventHandler, Good } from "./app/externalEvents/externalEventHandler"
+import { fakeProductCreatedEvents } from "./app/externalEvents/externalEvent.fake"
 
 export class ProcedureQueryFactory {
-  static build(app: Application, io: Server) {
-    const queryDb = new TestDB<Versioned<TProcedure>>([], "id")
-    new QueryApi(app, queryDb).setUp()
+  static async build(app: Application, io: Server) {
+    const procedureDb = new TestDB<Versioned<TProcedure>>([], "id")
+    const goodDb = new TestDB<Good>([], "id")
+
+    const eventHandler = new ExternalEventHandler(io, goodDb)
+
+    // Create fake goods
+    await eventHandler.handle(fakeProductCreatedEvents(20))
+
+    new QueryApi(app, procedureDb, goodDb).setUp()
     const notifier = new SocketIoNotifier(io)
     const events = new WriteEvents()
 
-    return new WriteHandler(events, queryDb, notifier)
+    return new WriteHandler(events, procedureDb, notifier)
   }
 }
 
@@ -39,11 +48,9 @@ export class ProcedureServiceFactory {
   }
 }
 
-const setUpProcedureService = (app: Application, io: Server) => {
+const setUpProcedureService = async (app: Application, io: Server) => {
   // Query side
-  const writeHandler = ProcedureQueryFactory.build(app, io)
-  const queryDb = new TestDB<TProcedure>([], "id")
-  new QueryApi(app, queryDb).setUp()
+  const writeHandler = await ProcedureQueryFactory.build(app, io)
 
   // Register query event handler
   const eventBroker = new EventBroker()
@@ -71,7 +78,7 @@ export const app = async (port = 4000) => {
     })
   })
 
-  setUpProcedureService(app, io)
+  await setUpProcedureService(app, io)
 
   return server
 }
