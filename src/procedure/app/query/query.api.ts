@@ -3,11 +3,6 @@ import { DataStore } from "../../../packages/db/testDB"
 import { ConsumedGood, TProcedure } from "../../domain/procedure"
 import { Good } from "../externalEvents/externalEventHandler"
 
-const fakeGoods = {
-  "1": "Medication",
-  "2": "Surgery",
-  "3": "Vaccination",
-}
 export class QueryApi {
   constructor(
     private readonly app: Application,
@@ -26,13 +21,14 @@ export class QueryApi {
         const procedure = await this.procedureRepo.get(req.params.id)
         if (!procedure) return res.status(400).json({ error: "Procedure not found" })
 
-        // this would map from the  products repo
+        const goods = await this.goodRepo.getAll()
+
         const mapped = {
           ...procedure,
           consumedGoods: procedure?.consumedGoods.map((good) => {
             return {
               ...good,
-              name: fakeGoods[good.goodId],
+              name: goods.find((dbGood) => dbGood.id === good.goodId)?.name,
             } as ConsumedGood
           }),
         }
