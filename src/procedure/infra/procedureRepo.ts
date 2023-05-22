@@ -1,4 +1,4 @@
-import { EventDb } from "../../../packages/eventSourcing/testEventDb"
+import { EventDb } from "../../packages/eventSourcing/testEventDb"
 
 import { ProcedureEvents } from "../domain/procedure.changeEvents"
 

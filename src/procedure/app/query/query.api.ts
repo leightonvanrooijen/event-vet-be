@@ -1,11 +1,11 @@
 import { Application } from "express"
-import { DataStore } from "../../../../packages/db/testDB"
+import { DataStore } from "../../../packages/db/testDB"
 import { ConsumedGood, TProcedure } from "../../domain/procedure"
 
 const fakeGoods = {
   "1": "Medication",
-  "2": "Hat",
-  "3": "Treat",
+  "2": "Surgery",
+  "3": "Vaccination",
 }
 export class QueryApi {
   constructor(private readonly app: Application, private readonly db: DataStore<TProcedure>) {}

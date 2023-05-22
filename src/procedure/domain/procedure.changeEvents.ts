@@ -1,5 +1,5 @@
-import { ChangeEvent } from "../../../packages/eventSourcing/changeEvent.types"
-import { BrokerEvent } from "../../../packages/eventSourcing/eventBroker.types"
+import { ChangeEvent } from "../../packages/eventSourcing/changeEvent.types"
+import { BrokerEvent } from "../../packages/eventSourcing/eventBroker.types"
 
 export type ProcedureCreatedEvent = ChangeEvent<{ id: string; name: string; animalId: string; status: string }>
 export type ProcedureBeganEvent = ChangeEvent<{ status: "inProgress" }>

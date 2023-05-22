@@ -1,7 +1,7 @@
 import { TProcedure } from "./procedure"
 import { ProcedureApplier } from "./procedure.applier"
 import { ProcedureChangeEvents } from "./procedure.changeEvents"
-import { BrokerEvent } from "../../../packages/eventSourcing/eventBroker.types"
+import { BrokerEvent } from "../../packages/eventSourcing/eventBroker.types"
 
 export class ProcedureHydrator {
   constructor(private readonly event: ProcedureChangeEvents, private readonly applier: ProcedureApplier) {}

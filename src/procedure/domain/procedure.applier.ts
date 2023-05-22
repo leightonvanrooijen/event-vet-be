@@ -1,4 +1,4 @@
-import { throwIfEmpty } from "../../../packages/utils"
+import { throwIfEmpty } from "../../packages/utils"
 import { ConsumedGood, ProcedureStatus, TProcedure } from "./procedure"
 import { append, curry, lensPath, lensProp, over } from "ramda"
 

@@ -1,5 +1,5 @@
-import { BrokerEvent } from "../../../../packages/eventSourcing/eventBroker.types"
-import { DataStore } from "../../../../packages/db/testDB"
+import { BrokerEvent } from "../../../packages/eventSourcing/eventBroker.types"
+import { DataStore } from "../../../packages/db/testDB"
 import { ProcedureStatus, TProcedure } from "../../domain/procedure"
 import {
   GoodConsumedEvent,
@@ -8,7 +8,7 @@ import {
   ProcedureFinishedEvent,
 } from "../../domain/procedure.changeEvents"
 import { SocketIoNotifier } from "./socketIoNotifier"
-import { Handler } from "../../../../packages/eventSourcing/eventBroker"
+import { Handler } from "../../../packages/eventSourcing/eventBroker"
 
 // Todo this is quite brittle in terms of event ordering and blind application of events
 export type Versioned<T extends Record<string, any>> = T & { version: number }

@@ -6,7 +6,7 @@ import {
   ProcedureCreatedEvent,
   ProcedureFinishedEvent,
 } from "./procedure.changeEvents"
-import { makeFakes } from "../../../packages/eventSourcing/changeEvent.fake"
+import { makeFakes } from "../../packages/eventSourcing/changeEvent.fake"
 
 export const consumedGoodFake = (overwrites?: Partial<ConsumedGood>): ConsumedGood => ({
   goodId: faker.datatype.uuid(),

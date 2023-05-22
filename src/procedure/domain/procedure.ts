@@ -1,4 +1,4 @@
-import { createUuid, Uuid } from "../../../packages/uuid/uuid.types"
+import { createUuid, Uuid } from "../../packages/uuid/uuid.types"
 import { ProcedureRepo } from "../infra/procedureRepo"
 import { ProcedureHydrator } from "./procedure.hydrator"
 import { ProcedureChangeEvents, ProcedureCreatedEvent, ProcedureEvents } from "./procedure.changeEvents"

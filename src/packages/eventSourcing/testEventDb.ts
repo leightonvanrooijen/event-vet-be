@@ -22,6 +22,7 @@ export class TestEventDb implements EventDb<VersionedChangeEvent<any>> {
 
     if (!aggregateExistsInStore(this.store, aggregateId)) {
       this.store[aggregateId] = versionEvents(events, currentVersion)
+      console.log(this.store[aggregateId])
       await this.eventBroker.process(versionEvents(events, currentVersion))
       return Promise.resolve()
     }
@@ -45,6 +46,6 @@ function versionEvents(events: ChangeEvent<any>[], currentVersion: number): Vers
   return events.map((event, index) => ({ ...event, version: currentVersion + index + 1 }))
 }
 function getCurrentVersion(events: VersionedChangeEvent<any>[]) {
-  if (!events || events.length === 0) return 0
+  if (!events || events?.length === 0) return 0
   return events[events.length - 1].version
 }

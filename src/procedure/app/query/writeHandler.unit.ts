@@ -1,7 +1,7 @@
 import { Thespian } from "thespian"
 import { ProcedureChangeEvents } from "../../domain/procedure.changeEvents"
 import { WriteHandler } from "./writeHandler"
-import { DataStore } from "../../../../packages/db/testDB"
+import { DataStore } from "../../../packages/db/testDB"
 import { TProcedure } from "../../domain/procedure"
 import {
   goodConsumedEventFake,
