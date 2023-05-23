@@ -6,7 +6,7 @@ transfer. Over time, it evolved into also exploring DDD concepts, testing bounda
 
 
 ## Running the app
-Everything is done from either the acceptance tests as I did not want to spin up actual services and APIs. For now just
+Everything is done from either the acceptance tests as IGood did not want to spin up actual services and APIs. For now just
 run them via your IDE as there is no script to run them - will fix in future.
 
 

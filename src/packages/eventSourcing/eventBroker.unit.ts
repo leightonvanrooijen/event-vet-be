@@ -5,8 +5,8 @@ describe("buildEventBroker", () => {
   describe("process", () => {
     it("call each eventHandler with the events", async () => {
       const fakeEvents = [
-        { eventId: "123", aggregateId: "123", type: "a", data: {} },
-        { eventId: "1233", aggregateId: "123", type: "a", data: {} },
+        { eventId: "123", aggregateId: "123", type: "a", data: {}, version: 1 },
+        { eventId: "1233", aggregateId: "123", type: "a", data: {}, version: 2 },
       ]
 
       const thespian = new Thespian()

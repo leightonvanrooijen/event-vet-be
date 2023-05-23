@@ -1,5 +1,4 @@
 import { ChangeEvent } from "../../packages/eventSourcing/changeEvent.types"
-import { BrokerEvent } from "../../packages/eventSourcing/eventBroker.types"
 
 export type ProcedureCreatedEvent = ChangeEvent<{ id: string; name: string; animalId: string; status: string }>
 export type ProcedureBeganEvent = ChangeEvent<{ status: "inProgress" }>
@@ -37,19 +36,19 @@ export class ProcedureChangeEvents {
     }
   }
 
-  isBegan(event: BrokerEvent): event is ProcedureBeganEvent {
+  isBegan(event: ProcedureEvents): event is ProcedureBeganEvent {
     return event.type === "procedureBegan"
   }
 
-  isCreated(event: BrokerEvent): event is ProcedureCreatedEvent {
+  isCreated(event: ProcedureEvents): event is ProcedureCreatedEvent {
     return event.type === "procedureCreated"
   }
 
-  isFinished(event: BrokerEvent): event is ProcedureFinishedEvent {
+  isFinished(event: ProcedureEvents): event is ProcedureFinishedEvent {
     return event.type === "procedureFinished"
   }
 
-  isGoodConsumed(event: BrokerEvent): event is GoodConsumedEvent {
+  isGoodConsumed(event: ProcedureEvents): event is GoodConsumedEvent {
     return event.type === "goodConsumed"
   }
 }

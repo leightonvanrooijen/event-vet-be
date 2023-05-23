@@ -1,12 +1,11 @@
 import { TProcedure } from "./procedure"
 import { ProcedureApplier } from "./procedure.applier"
-import { ProcedureChangeEvents } from "./procedure.changeEvents"
-import { BrokerEvent } from "../../packages/eventSourcing/eventBroker.types"
+import { ProcedureChangeEvents, ProcedureEvents } from "./procedure.changeEvents"
 
 export class ProcedureHydrator {
   constructor(private readonly event: ProcedureChangeEvents, private readonly applier: ProcedureApplier) {}
 
-  hydrate(events: BrokerEvent[]) {
+  hydrate(events: ProcedureEvents[]) {
     return events.reduce((procedure: TProcedure, event) => {
       if (this.event.isCreated(event)) {
         return this.applier.create(event.data.animalId, event.data.name, event.aggregateId)

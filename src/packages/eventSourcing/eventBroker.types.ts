@@ -1,3 +1,3 @@
-import { ChangeEvent } from "./changeEvent.types"
+import { VersionedChangeEvent } from "./testEventDb"
 
-export type BrokerEvent = ChangeEvent<Record<string, any>>
+export type BrokerEvent = VersionedChangeEvent<Record<string, any>>

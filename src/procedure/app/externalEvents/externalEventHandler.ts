@@ -14,8 +14,8 @@ export type Good = {
   type: "product"
 }
 
-export type ProductCreatedEvent = ChangeEvent<{ id: string; name: string; price: number }>
-export type ExternalEvents = ProductCreatedEvent
+export type ProductCreatedEvent = ChangeEvent<Product>
+export type ExternalEvents = ChangeEvent<any>
 
 export const isProductCreatedEvent = (event: ExternalEvents): event is ProductCreatedEvent =>
   event.type === "productCreated"
@@ -41,6 +41,6 @@ export class ExternalEventHandler {
       type: "product",
     }
     await this.goodRepo.create(good)
-    this.socket.emit("goodCreated", good)
+    this.socket.emit("procedureGoodCreated", good)
   }
 }

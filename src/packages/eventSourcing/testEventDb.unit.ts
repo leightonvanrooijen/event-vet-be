@@ -41,7 +41,14 @@ describe("buildTestEventDb", () => {
 
       const changeEvents = changeEventFakes()(2, overwrites)
 
-      broker.setup((s) => s.process(changeEvents)).returns(() => Promise.resolve())
+      broker
+        .setup((s) =>
+          s.process([
+            { version: 1, ...changeEvents[0] },
+            { version: 2, ...changeEvents[1] },
+          ]),
+        )
+        .returns(() => Promise.resolve())
 
       const { testEventDb } = setUp({}, broker.object)
 
