@@ -3,7 +3,6 @@ import {
   invoiceCreatedEventFake,
   invoiceFake,
   orderAddedEventFake,
-  requestedOrderFake,
   unPricedOrderFake,
 } from "../../domain/Invoice.fake"
 import { Thespian } from "thespian"
@@ -11,6 +10,7 @@ import { Invoice } from "../../domain/Invoice"
 import { InvoiceService } from "./invoiceService"
 import { assertThat } from "mismatched"
 import { GoodService } from "./GoodService"
+import { requestedOrderFake } from "./command.fake"
 
 let thespian: Thespian
 const setUp = () => {

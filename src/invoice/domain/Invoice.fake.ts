@@ -1,24 +1,16 @@
 import { Product } from "../../procedure/app/externalEvents/externalEventHandler"
 import { faker } from "@faker-js/faker"
-import { InvoiceOffer, InvoiceOrder, InvoiceType, UnPricedOffer, UnPricedOrder } from "./Invoice"
+import { InvoiceOffer, InvoiceOrder, InvoiceT, UnPricedOffer, UnPricedOrder } from "./Invoice"
 import { makeFakes } from "../../packages/eventSourcing/changeEvent.fake"
 import { InvoiceBilledEvent, InvoiceCreatedEvent, InvoiceOrderAddedEvent } from "./InvoiceChangeEvents"
 import { IGood } from "../app/externalEvents/externalEventHandler"
-import { RequestedOffer, RequestedOrder } from "../app/command/command.types"
+import { requestedOrderFake } from "../app/command/command.fake"
 
 export const goodFake = (overrides?: Partial<Product>): IGood => ({
   id: faker.datatype.uuid(),
   name: faker.commerce.productName(),
   price: Number(faker.commerce.price()),
   type: "product",
-  ...overrides,
-})
-
-export const requestedOfferFake = (overrides?: Partial<RequestedOffer>): RequestedOffer => ({
-  goodOffered: { id: faker.datatype.uuid() },
-  typeOfGood: "product",
-  quantity: faker.datatype.number(),
-  businessFunction: "sell",
   ...overrides,
 })
 
@@ -41,16 +33,8 @@ export const unPricedOfferFake = (overrides?: Partial<UnPricedOffer>): UnPricedO
   ...overrides,
 })
 
-export const requestedOrderFake = (overrides?: Partial<RequestedOrder>): RequestedOrder => ({
-  type: "procedure",
-  aggregateId: faker.datatype.uuid(),
-  name: faker.name.firstName(),
-  offers: offerFakes(3),
-  ...overrides,
-})
-
 export const orderFake = (overrides?: Partial<InvoiceOrder>): InvoiceOrder => ({
-  ...requestedOrderFake(overrides),
+  ...unPricedOrderFake(overrides),
   offers: offerFakes(3),
   ...overrides,
 })
@@ -63,7 +47,7 @@ export const unPricedOrderFake = (overrides?: Partial<UnPricedOrder>): UnPricedO
   ...overrides,
 })
 
-export const invoiceFake = (overrides?: Partial<InvoiceType>): InvoiceType => ({
+export const invoiceFake = (overrides?: Partial<InvoiceT>): InvoiceT => ({
   id: faker.datatype.uuid(),
   customerId: faker.datatype.uuid(),
   orders: orderFakes(2),
@@ -88,15 +72,15 @@ export const orderAddedEventFake = (overrides?: Partial<InvoiceOrderAddedEvent>)
 export const invoiceBilledEventFake = (overrides?: Partial<InvoiceBilledEvent>): InvoiceBilledEvent => ({
   type: "invoiceBilled",
   aggregateId: faker.datatype.uuid(),
-  data: { id: faker.datatype.uuid() },
+  data: { status: "billed" },
   ...overrides,
 })
 
-export const invoiceEventFakes = (id: string, status: "Billed" = "Billed") => {
+export const invoiceEventFakes = (id: string) => {
   const invoice = invoiceFake({ id })
   return [
     invoiceCreatedEventFake({ aggregateId: invoice.id, data: invoice }),
     orderAddedEventFake({ aggregateId: invoice.id }),
-    invoiceBilledEventFake({ aggregateId: invoice.id, data: { id: invoice.id } }),
+    invoiceBilledEventFake({ aggregateId: invoice.id }),
   ]
 }

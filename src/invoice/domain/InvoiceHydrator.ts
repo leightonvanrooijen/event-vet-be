@@ -1,11 +1,11 @@
 import { InvoiceChangeEvents, InvoiceEvents } from "./InvoiceChangeEvents"
-import { InvoiceType } from "./Invoice"
+import { InvoiceT } from "./Invoice"
 import { InvoiceApplier } from "./InvoiceApplier"
 
 export class InvoiceHydrator {
   constructor(private readonly event: InvoiceChangeEvents, private readonly applier: InvoiceApplier) {}
 
-  hydrate(events: InvoiceEvents[]): InvoiceType {
+  hydrate(events: InvoiceEvents[]): InvoiceT {
     return events.reduce((state, event) => {
       if (this.event.isCreated(event)) {
         return this.applier.create(event.data.id, event.data.customerId)
@@ -17,6 +17,6 @@ export class InvoiceHydrator {
         return this.applier.bill(state)
       }
       return state
-    }, {} as InvoiceType)
+    }, {} as InvoiceT)
   }
 }

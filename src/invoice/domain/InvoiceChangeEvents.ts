@@ -1,9 +1,9 @@
-import { InvoiceOrder, InvoiceStatuses, InvoiceType } from "./Invoice"
+import { InvoiceOrder, InvoiceStatuses, InvoiceT } from "./Invoice"
 import { ChangeEvent } from "../../packages/eventSourcing/changeEvent.types"
 
-export type InvoiceCreatedEvent = ChangeEvent<InvoiceType>
+export type InvoiceCreatedEvent = ChangeEvent<InvoiceT>
 export type InvoiceOrderAddedEvent = ChangeEvent<{ order: InvoiceOrder }>
-export type InvoiceBilledEvent = ChangeEvent<{ id: string }>
+export type InvoiceBilledEvent = ChangeEvent<{ status: InvoiceStatuses }>
 export type InvoiceEvents = InvoiceCreatedEvent | InvoiceOrderAddedEvent | InvoiceBilledEvent
 
 export class InvoiceChangeEvents {
@@ -25,7 +25,7 @@ export class InvoiceChangeEvents {
       type: "invoiceBilled",
       aggregateId: id,
       data: {
-        id,
+        status: "billed",
       },
     }
   }

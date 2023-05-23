@@ -115,7 +115,7 @@ describe("Invoice", () => {
 
       const event = invoice.bill(fakeInvoice)
 
-      assertThat(event).is(match.obj.has({ type: "invoiceBilled", data: { id: fakeInvoice.id } }))
+      assertThat(event).is(match.obj.has({ type: "invoiceBilled", data: { status: "billed" } }))
     })
     it("cannot bill an already billed invoice", () => {
       const { invoice } = setUp()
@@ -129,7 +129,7 @@ describe("Invoice", () => {
       // this tests that everything works together
       const { invoice, repo } = setUp()
       const aggregateId = "123"
-      const events = invoiceEventFakes(aggregateId, "Billed")
+      const events = invoiceEventFakes(aggregateId)
 
       repo.setup((r) => r.get(aggregateId)).returns(() => Promise.resolve(events))
 

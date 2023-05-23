@@ -1,8 +1,9 @@
 import { GoodRepo } from "../../infra/goodRepo"
 import { Thespian } from "thespian"
 import { GoodService } from "./GoodService"
-import { goodFake, requestedOfferFake, requestedOrderFake } from "../../domain/Invoice.fake"
+import { goodFake } from "../../domain/Invoice.fake"
 import { assertThat } from "mismatched"
+import { requestedOfferFake, requestedOrderFake } from "./command.fake"
 
 describe("GoodService", () => {
   describe("addNameAndPricing", () => {

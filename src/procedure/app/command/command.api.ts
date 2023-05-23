@@ -1,7 +1,8 @@
 import { Application } from "express"
 import { ProcedureService } from "./procedureService"
+import { Api } from "../../../packages/api/api"
 
-export class ProcedureCommandApi {
+export class ProcedureCommandApi implements Api {
   constructor(private readonly app: Application, private readonly service: ProcedureService) {}
   setUp() {
     this.app.post("/procedure/create", async (req, res) => {

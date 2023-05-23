@@ -1,5 +1,6 @@
 import { Server } from "socket.io"
 
+// TODO make this generic
 export class SocketIoNotifier {
   constructor(private readonly socket: Server) {}
 

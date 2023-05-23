@@ -1,5 +1,5 @@
 import { Thespian } from "thespian"
-import { Versioned, WriteEvents, WriteHandler } from "./writeHandler"
+import { WriteEvents, WriteHandler } from "./writeHandler"
 import { DataStore } from "../../../packages/db/testDB"
 import { TProcedure } from "../../domain/procedure"
 import {
@@ -10,6 +10,7 @@ import {
   procedureFinishedEventFake,
 } from "../../domain/procedure.fake"
 import { SocketIoNotifier } from "./socketIoNotifier"
+import { applyVersion, Versioned } from "../../../packages/eventSourcing/applyVersion"
 
 let thespian: Thespian
 const setUp = () => {
@@ -28,10 +29,10 @@ describe("writeHandler", () => {
     it("should create a procedure if the create event is received", async () => {
       const { writeHandler, db, notifier } = setUp()
 
-      const fake = procedureFake({ consumedGoods: [] })
-      const event = { version: 1, ...procedureCreatedEventFake({ data: fake }) }
+      const fake = applyVersion(procedureFake({ consumedGoods: [] }))
+      const event = applyVersion(procedureCreatedEventFake({ data: fake }))
 
-      db.setup((s) => s.create({ version: 1, ...fake })).returns(() => Promise.resolve({ version: 1, ...fake }))
+      db.setup((s) => s.create(fake)).returns(() => Promise.resolve(fake))
       notifier.setup((s) => s.notify(fake.id)).returns(() => Promise.resolve())
 
       await writeHandler.handle([event])
@@ -39,8 +40,8 @@ describe("writeHandler", () => {
     it("should begin a procedure if the begin event is received", async () => {
       const { writeHandler, db, notifier } = setUp()
 
-      const fake = { version: 1, ...procedureFake({ status: "inProgress" }) }
-      const event = { version: 1, ...procedureBeganEventFake({ aggregateId: fake.id }) }
+      const fake = applyVersion(procedureFake({ status: "inProgress" }))
+      const event = applyVersion(procedureBeganEventFake({ aggregateId: fake.id }))
 
       db.setup((s) => s.update({ id: fake.id, status: fake.status, version: fake.version })).returns(() =>
         Promise.resolve({ version: 1, ...fake }),
@@ -52,12 +53,10 @@ describe("writeHandler", () => {
     it("should finish a procedure if the finish event is received", async () => {
       const { writeHandler, db, notifier } = setUp()
 
-      const fake = procedureFake({ status: "finished" })
-      const event = { version: 1, ...procedureFinishedEventFake({ aggregateId: fake.id }) }
+      const fake = applyVersion(procedureFake({ status: "finished" }))
+      const event = applyVersion(procedureFinishedEventFake({ aggregateId: fake.id }))
 
-      db.setup((s) => s.update({ id: fake.id, status: fake.status, version: 1 })).returns(() =>
-        Promise.resolve({ version: 1, ...fake }),
-      )
+      db.setup((s) => s.update({ id: fake.id, status: fake.status, version: 1 })).returns(() => Promise.resolve(fake))
       notifier.setup((s) => s.notify(fake.id)).returns(() => Promise.resolve())
 
       await writeHandler.handle([event])
@@ -65,8 +64,8 @@ describe("writeHandler", () => {
     it("should add the consumed good if the good consumed event is received", async () => {
       const { writeHandler, db, notifier } = setUp()
 
-      const fake = { version: 1, ...procedureFake({ consumedGoods: [] }) }
-      const event = { version: 1, ...goodConsumedEventFake({ aggregateId: fake.id }) }
+      const fake = applyVersion(procedureFake({ consumedGoods: [] }))
+      const event = applyVersion(goodConsumedEventFake({ aggregateId: fake.id }))
 
       db.setup((s) => s.get(fake.id)).returns(() => Promise.resolve(fake))
       db.setup((s) =>

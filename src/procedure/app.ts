@@ -3,7 +3,7 @@ import cors from "cors"
 import { QueryApi } from "./app/query/query.api"
 import { TestDB } from "../packages/db/testDB"
 import { Procedure, TProcedure } from "./domain/procedure"
-import { Versioned, WriteEvents, WriteHandler } from "./app/query/writeHandler"
+import { WriteEvents, WriteHandler } from "./app/query/writeHandler"
 import { Server } from "socket.io"
 import { SocketIoNotifier } from "./app/query/socketIoNotifier"
 import { TestEventDb } from "../packages/eventSourcing/testEventDb"
@@ -16,6 +16,7 @@ import { ProcedureChangeEvents } from "./domain/procedure.changeEvents"
 import { EventBroker } from "../packages/eventSourcing/eventBroker"
 import { ExternalEventHandler, Good } from "./app/externalEvents/externalEventHandler"
 import { fakeProductCreatedEvents } from "./app/externalEvents/externalEvent.fake"
+import { Versioned } from "../packages/eventSourcing/applyVersion"
 
 export class ProcedureQueryFactory {
   static async build(app: Application, io: Server) {

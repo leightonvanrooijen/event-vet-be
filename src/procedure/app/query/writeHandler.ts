@@ -9,9 +9,8 @@ import {
 } from "../../domain/procedure.changeEvents"
 import { SocketIoNotifier } from "./socketIoNotifier"
 import { Handler } from "../../../packages/eventSourcing/eventBroker"
-
+import { Versioned } from "../../../packages/eventSourcing/applyVersion"
 // Todo this is quite brittle in terms of event ordering and blind application of events
-export type Versioned<T extends Record<string, any>> = T & { version: number }
 
 export class WriteEvents {
   isBegan(event: BrokerEvent): event is Versioned<ProcedureBeganEvent> {
@@ -33,8 +32,8 @@ export class WriteEvents {
 
 export class WriteHandler implements Handler {
   constructor(
-    private readonly event: WriteEvents, // borrowed from command side
-    private readonly db: DataStore<Versioned<TProcedure>>, // same as above for type
+    private readonly event: WriteEvents,
+    private readonly db: DataStore<Versioned<TProcedure>>, // borrowed from command side
     private readonly notifier: SocketIoNotifier,
   ) {}
 

@@ -30,7 +30,7 @@ export type InvoiceOrder = {
 }
 
 export type InvoiceStatuses = "draft" | "billed"
-export type InvoiceType = {
+export type InvoiceT = {
   id: string
   customerId: string
   orders: InvoiceOrder[]
@@ -51,7 +51,7 @@ export class Invoice {
     return this.event.created(this.uuid(), customerId, invoice.orders, invoice.status)
   }
 
-  async addOrder(state: InvoiceType, unPricedOrder: UnPricedOrder) {
+  async addOrder(state: InvoiceT, unPricedOrder: UnPricedOrder) {
     if (state.status === "billed") throw new Error("Cannot add order to billed invoice")
     if (!unPricedOrder) throw new Error("Orders must contain at least one good")
 
@@ -71,7 +71,7 @@ export class Invoice {
     return this.event.orderAdded(invoice.id, order)
   }
 
-  bill(state: InvoiceType) {
+  bill(state: InvoiceT) {
     if (state.status === "billed") throw new Error("Cannot bill an already billed invoice")
     const invoice = this.applier.bill(state)
     return this.event.billed(invoice.id)
