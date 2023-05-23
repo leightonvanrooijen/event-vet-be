@@ -1,17 +1,25 @@
-import { Product } from "../../procedure/app/externalEvents/externalEventHandler"
 import { InvoiceChangeEvents, InvoiceEvents } from "./InvoiceChangeEvents"
 import { InvoiceRepo } from "../infra/InvoiceRepo"
 import { InvoiceHydrator } from "./InvoiceHydrator"
 import { InvoiceApplier } from "./InvoiceApplier"
 import { createUuid, Uuid } from "../../packages/uuid/uuid.types"
 import { GoodRepo } from "../infra/goodRepo"
+import { IGood } from "../app/externalEvents/externalEventHandler"
 
-export type InvoiceOffer = {
-  goodOffered: Product
+export type UnPricedOffer = {
+  goodOffered: IGood
   typeOfGood: "product"
-  price: number
   quantity: number
-  businessFunction: "sell" // | "lease"
+  businessFunction: "sell"
+}
+
+export type InvoiceOffer = UnPricedOffer & { price: number }
+
+export type UnPricedOrder = {
+  type: "procedure"
+  aggregateId: string
+  name: string
+  offers: UnPricedOffer[]
 }
 
 export type InvoiceOrder = {
@@ -29,20 +37,6 @@ export type InvoiceType = {
   status: InvoiceStatuses
 }
 
-// fix this up to be composed
-export type OfferWithoutPricingAndName = {
-  goodOffered: { id: string }
-  typeOfGood: "product"
-  quantity: number
-  businessFunction: "sell"
-}
-export type OrderWithoutPricing = {
-  type: "procedure"
-  aggregateId: string
-  name: string
-  offers: OfferWithoutPricingAndName[]
-}
-
 export class Invoice {
   constructor(
     private readonly repo: InvoiceRepo,
@@ -57,34 +51,24 @@ export class Invoice {
     return this.event.created(this.uuid(), customerId, invoice.orders, invoice.status)
   }
 
-  async addOrder(state: InvoiceType, orderWithoutPricing: OrderWithoutPricing) {
+  async addOrder(state: InvoiceType, unPricedOrder: UnPricedOrder) {
     if (state.status === "billed") throw new Error("Cannot add order to billed invoice")
-    if (!orderWithoutPricing) throw new Error("Orders must contain at least one good")
+    if (!unPricedOrder) throw new Error("Orders must contain at least one good")
 
-    const foundIndex = state.orders.findIndex((contained) => contained.aggregateId === orderWithoutPricing.aggregateId)
+    const foundIndex = state.orders.findIndex((contained) => contained.aggregateId === unPricedOrder.aggregateId)
     if (foundIndex >= 0) throw new Error("Order is already on the invoice")
 
-    //  extract this out into it's own object
-    const goodIds = orderWithoutPricing.offers.map((offer) => offer.goodOffered.id)
-    const goods = await this.goodRepo.getByIds(goodIds)
-    const offersWithPricing: InvoiceOffer[] = orderWithoutPricing.offers.map((offer) => {
-      const good = goods.find((good) => good.id === offer.goodOffered.id)
+    const offers = unPricedOrder.offers.map((offer) => {
       return {
         ...offer,
-        price: good.price * offer.quantity,
-        goodOffered: {
-          id: good.id,
-          name: good.name,
-          price: good.price,
-          type: good.type,
-        },
+        price: offer.goodOffered.price * offer.quantity,
       }
     })
-    const orderWithPricing = { ...orderWithoutPricing, offers: offersWithPricing }
 
-    const invoice = this.applier.addOrder(state, orderWithPricing)
-    const event = this.event.orderAdded(invoice.id, orderWithPricing)
-    return event
+    const order = { ...unPricedOrder, offers }
+
+    const invoice = this.applier.addOrder(state, order)
+    return this.event.orderAdded(invoice.id, order)
   }
 
   bill(state: InvoiceType) {

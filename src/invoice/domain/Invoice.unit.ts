@@ -1,7 +1,14 @@
 import { Thespian } from "thespian"
 import { Invoice } from "./Invoice"
 import { assertThat, match } from "mismatched"
-import { goodFake, invoiceEventFakes, invoiceFake, offerFake, orderFake } from "./Invoice.fake"
+import {
+  goodFake,
+  invoiceEventFakes,
+  invoiceFake,
+  orderFake,
+  unPricedOfferFake,
+  unPricedOrderFake,
+} from "./Invoice.fake"
 import { InvoiceChangeEvents } from "./InvoiceChangeEvents"
 import { InvoiceRepo } from "../infra/InvoiceRepo"
 import { InvoiceHydrator } from "./InvoiceHydrator"
@@ -54,17 +61,13 @@ describe("Invoice", () => {
   })
   describe("addOrder", () => {
     it("can add an order to an invoice, also adds pricing to each good", async () => {
-      // TODO break this out into easier to aggregates
-
-      const { invoice, goodRepo } = setUp()
+      const { invoice } = setUp()
       const fakeInvoice = invoiceFake({ status: "draft", orders: [] })
       const fakeGood = goodFake({ price: 100 })
-      const fakeOffer = offerFake({ goodOffered: fakeGood, quantity: 2 })
-      const fakeOrder = orderFake({ offers: [fakeOffer] })
+      const fakeUnPricedOffer = unPricedOfferFake({ goodOffered: fakeGood, quantity: 2 })
+      const fakeUnPricedOrder = unPricedOrderFake({ offers: [fakeUnPricedOffer] })
 
-      goodRepo.setup((g) => g.getByIds([fakeOffer.goodOffered.id])).returns(() => Promise.resolve([fakeGood]))
-
-      const event = await invoice.addOrder(fakeInvoice, fakeOrder)
+      const event = await invoice.addOrder(fakeInvoice, fakeUnPricedOrder)
 
       assertThat(event).is(
         match.obj.has({
@@ -72,15 +75,15 @@ describe("Invoice", () => {
           data: {
             order: {
               type: "procedure",
-              aggregateId: fakeOrder.aggregateId,
-              name: fakeOrder.name,
+              aggregateId: fakeUnPricedOrder.aggregateId,
+              name: fakeUnPricedOrder.name,
               offers: [
                 {
-                  goodOffered: fakeOffer.goodOffered,
-                  typeOfGood: fakeOffer.typeOfGood,
-                  quantity: fakeOffer.quantity,
+                  goodOffered: fakeUnPricedOffer.goodOffered,
+                  typeOfGood: fakeUnPricedOffer.typeOfGood,
+                  quantity: fakeUnPricedOffer.quantity,
                   price: 200,
-                  businessFunction: fakeOffer.businessFunction,
+                  businessFunction: fakeUnPricedOffer.businessFunction,
                 },
               ],
             },

@@ -3,20 +3,23 @@ import {
   invoiceCreatedEventFake,
   invoiceFake,
   orderAddedEventFake,
-  orderWithoutPricingFake,
+  requestedOrderFake,
+  unPricedOrderFake,
 } from "../../domain/Invoice.fake"
 import { Thespian } from "thespian"
 import { Invoice } from "../../domain/Invoice"
 import { InvoiceService } from "./invoiceService"
 import { assertThat } from "mismatched"
+import { GoodService } from "./GoodService"
 
 let thespian: Thespian
 const setUp = () => {
   thespian = new Thespian()
   const invoice = thespian.mock<Invoice>("Invoice")
-  const invoiceService = new InvoiceService(invoice.object)
+  const goodService = thespian.mock<GoodService>("GoodService")
+  const invoiceService = new InvoiceService(invoice.object, goodService.object)
 
-  return { invoiceService, invoice }
+  return { invoiceService, invoice, goodService }
 }
 
 afterEach(() => thespian.verify())
@@ -38,16 +41,20 @@ describe("InvoiceService", () => {
   })
   describe("addOrder", () => {
     it("should add order to the invoice", async () => {
-      const { invoiceService, invoice } = setUp()
+      const { invoiceService, invoice, goodService } = setUp()
       const fakeInvoice = invoiceFake()
-      const fakeOrder = orderWithoutPricingFake()
+      const fakeRequestedOrder = requestedOrderFake()
+      const fakerUnPriceOrder = unPricedOrderFake()
       const fakeEvent = orderAddedEventFake()
 
       invoice.setup((i) => i.hydrate(fakeInvoice.id)).returns(() => Promise.resolve(fakeInvoice))
-      invoice.setup((i) => i.addOrder(fakeInvoice, fakeOrder)).returns(() => Promise.resolve(fakeEvent))
+      goodService
+        .setup((g) => g.addNameAndPricing(fakeRequestedOrder))
+        .returns(() => Promise.resolve(fakerUnPriceOrder))
+      invoice.setup((i) => i.addOrder(fakeInvoice, fakerUnPriceOrder)).returns(() => Promise.resolve(fakeEvent))
       invoice.setup((i) => i.persist([fakeEvent], 0))
 
-      await invoiceService.addOrder(fakeInvoice.id, fakeOrder, 0)
+      await invoiceService.addOrder(fakeInvoice.id, fakeRequestedOrder, 0)
     })
   })
   describe("bill", () => {

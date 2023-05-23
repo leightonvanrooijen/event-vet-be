@@ -1,7 +1,7 @@
 import { ChangeEvent } from "../../../packages/eventSourcing/changeEvent.types"
 import { InvoiceService } from "../command/invoiceService"
 import { ConsumedGood, ProcedureStatus } from "../../../procedure/domain/procedure"
-import { OfferWithoutPricingAndName, OrderWithoutPricing } from "../../domain/Invoice"
+import { RequestedOffer, RequestedOrder } from "../command/command.types"
 
 export type IProduct = {
   id: string
@@ -66,7 +66,7 @@ export class ProcedureService implements EventHandler {
     await this.invoiceService.addOrder(id, order, 1)
   }
 
-  convertProcedureToOrder(procedure: IProcedure): OrderWithoutPricing {
+  convertProcedureToOrder(procedure: IProcedure): RequestedOrder {
     return {
       aggregateId: procedure.id,
       type: "procedure",
@@ -75,7 +75,7 @@ export class ProcedureService implements EventHandler {
     }
   }
 
-  convertConsumedGoodToOffer(consumedGood: ConsumedGood): OfferWithoutPricingAndName {
+  convertConsumedGoodToOffer(consumedGood: ConsumedGood): RequestedOffer {
     return {
       goodOffered: {
         id: consumedGood.goodId,

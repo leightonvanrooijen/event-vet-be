@@ -1,9 +1,10 @@
 import { Product } from "../../procedure/app/externalEvents/externalEventHandler"
 import { faker } from "@faker-js/faker"
-import { InvoiceOffer, InvoiceOrder, InvoiceType, OfferWithoutPricingAndName, OrderWithoutPricing } from "./Invoice"
+import { InvoiceOffer, InvoiceOrder, InvoiceType, UnPricedOffer, UnPricedOrder } from "./Invoice"
 import { makeFakes } from "../../packages/eventSourcing/changeEvent.fake"
 import { InvoiceBilledEvent, InvoiceCreatedEvent, InvoiceOrderAddedEvent } from "./InvoiceChangeEvents"
 import { IGood } from "../app/externalEvents/externalEventHandler"
+import { RequestedOffer, RequestedOrder } from "../app/command/command.types"
 
 export const goodFake = (overrides?: Partial<Product>): IGood => ({
   id: faker.datatype.uuid(),
@@ -13,19 +14,13 @@ export const goodFake = (overrides?: Partial<Product>): IGood => ({
   ...overrides,
 })
 
-export const goodFakes = makeFakes(goodFake)
-
-export const offerWithoutPricingFake = (
-  overrides?: Partial<OfferWithoutPricingAndName>,
-): OfferWithoutPricingAndName => ({
+export const requestedOfferFake = (overrides?: Partial<RequestedOffer>): RequestedOffer => ({
   goodOffered: { id: faker.datatype.uuid() },
   typeOfGood: "product",
   quantity: faker.datatype.number(),
   businessFunction: "sell",
   ...overrides,
 })
-
-export const offerWithoutPricingFakes = makeFakes(offerWithoutPricingFake)
 
 export const offerFake = (overrides?: Partial<InvoiceOffer>): InvoiceOffer => ({
   typeOfGood: "product",
@@ -38,7 +33,15 @@ export const offerFake = (overrides?: Partial<InvoiceOffer>): InvoiceOffer => ({
 
 export const offerFakes = makeFakes(offerFake)
 
-export const orderWithoutPricingFake = (overrides?: Partial<OrderWithoutPricing>): OrderWithoutPricing => ({
+export const unPricedOfferFake = (overrides?: Partial<UnPricedOffer>): UnPricedOffer => ({
+  typeOfGood: "product",
+  quantity: faker.datatype.number(),
+  businessFunction: "sell",
+  goodOffered: goodFake(overrides?.goodOffered),
+  ...overrides,
+})
+
+export const requestedOrderFake = (overrides?: Partial<RequestedOrder>): RequestedOrder => ({
   type: "procedure",
   aggregateId: faker.datatype.uuid(),
   name: faker.name.firstName(),
@@ -46,15 +49,19 @@ export const orderWithoutPricingFake = (overrides?: Partial<OrderWithoutPricing>
   ...overrides,
 })
 
-export const orderWithoutPricingFakes = makeFakes(orderWithoutPricingFake)
-
 export const orderFake = (overrides?: Partial<InvoiceOrder>): InvoiceOrder => ({
-  ...orderWithoutPricingFake(overrides),
+  ...requestedOrderFake(overrides),
   offers: offerFakes(3),
   ...overrides,
 })
 
 export const orderFakes = makeFakes(orderFake)
+
+export const unPricedOrderFake = (overrides?: Partial<UnPricedOrder>): UnPricedOrder => ({
+  ...requestedOrderFake(overrides),
+  offers: offerFakes(3).map((offer) => ({ ...offer, goodOffered: goodFake() })),
+  ...overrides,
+})
 
 export const invoiceFake = (overrides?: Partial<InvoiceType>): InvoiceType => ({
   id: faker.datatype.uuid(),
