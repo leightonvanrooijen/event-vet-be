@@ -1,18 +1,17 @@
 import express, { Application } from "express"
 import cors from "cors"
 import { Server } from "socket.io"
-import { ProcedureCommandApi } from "./app/command/command.api"
 import { EventBus } from "../packages/eventSourcing/eventBus"
-import { fakeProductCreatedEvents } from "./app/externalEvents/pInEvent.fake"
+import { fakeProductCreatedEvents } from "./app/externalEvents/procedureInEvent.fake"
 import { ProcedureQueryFactory } from "./app/query/ProcedureQueryFactory"
 import { ProcedureCommandFactory } from "./app/command/procedureCommandFactory"
-import { Good, PInEventHandler } from "./app/externalEvents/PInEventHandler"
+import { Good, ProcedureInEventHandler } from "./app/externalEvents/ProcedureInEventHandler"
 import { TestDB } from "../packages/db/testDB"
 
-export const setUpProcedureService = async (app: Application, io: Server, eventBus: EventBus) => {
+export const setUpProcedureService = async (app: Application, io: Server, externalEventBus: EventBus) => {
   // External in events
   const goodDb = new TestDB<Good>([], "id")
-  eventBus.registerHandler(new PInEventHandler(io, goodDb))
+  externalEventBus.registerHandler(new ProcedureInEventHandler(io, goodDb))
 
   // Query side
   const writeHandler = await ProcedureQueryFactory.build(app, io, goodDb)
@@ -22,8 +21,7 @@ export const setUpProcedureService = async (app: Application, io: Server, eventB
   internalEventBus.registerHandler(writeHandler)
 
   // Command side
-  const procedureCommand = ProcedureCommandFactory.build(internalEventBus)
-  new ProcedureCommandApi(app, procedureCommand).setUp()
+  ProcedureCommandFactory.build(app, internalEventBus, externalEventBus)
 }
 
 export const app = async (port = 4000) => {

@@ -1,4 +1,4 @@
-import { ProductCreatedEvent } from "./PInEventHandler"
+import { ProductCreatedEvent } from "./ProcedureInEventHandler"
 import { faker } from "@faker-js/faker"
 import { makeFakes } from "../../../packages/eventSourcing/changeEvent.fake"
 
