@@ -6,10 +6,11 @@ export type EventHandler = {
   handle(event: IExternalEvents): Promise<void>
 }
 
-export class InEventHandler {
+export class InvoiceInEventHandler {
   private readonly services: EventHandler[] = []
   constructor() {}
 
+  // TODO replace this with the generic solution
   addService(service: EventHandler) {
     this.services.push(service)
   }

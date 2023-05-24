@@ -13,7 +13,6 @@ import { InvoiceChangeEvents } from "./InvoiceChangeEvents"
 import { InvoiceRepo } from "../infra/InvoiceRepo"
 import { InvoiceHydrator } from "./InvoiceHydrator"
 import { InvoiceApplier } from "./InvoiceApplier"
-import { GoodRepo } from "../infra/goodRepo"
 
 let thespian: Thespian
 const setUp = () => {
@@ -22,11 +21,10 @@ const setUp = () => {
   const event = new InvoiceChangeEvents()
   const applier = new InvoiceApplier()
   const hydrator = new InvoiceHydrator(event, applier)
-  const goodRepo = thespian.mock<GoodRepo>("GoodRepo")
 
-  const invoice = new Invoice(repo.object, event, applier, hydrator, goodRepo.object, () => "123")
+  const invoice = new Invoice(repo.object, event, applier, hydrator, () => "123")
 
-  return { invoice, repo, goodRepo }
+  return { invoice, repo }
 }
 
 afterEach(() => thespian.verify())

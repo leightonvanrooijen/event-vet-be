@@ -4,7 +4,7 @@ import { DataStore } from "../../../packages/db/testDB"
 import { Versioned } from "../../../packages/eventSourcing/applyVersion"
 import { InvoiceT } from "../../domain/Invoice"
 
-export class QueryApi implements Api {
+export class InvoiceQueryApi implements Api {
   constructor(private readonly app: Application, private readonly invoiceRepo: DataStore<Versioned<InvoiceT>>) {}
   setUp(): void {
     this.getRoute()
@@ -13,6 +13,7 @@ export class QueryApi implements Api {
   getRoute(): void {
     this.app.get("/invoice/:id", async (req, res) => {
       try {
+        console.log("getting invoice", req.params.id)
         const invoice = await this.invoiceRepo.get(req.params.id)
         if (!invoice) return res.status(400).json({ error: "Invoice not found" })
 

@@ -3,8 +3,7 @@ import { InvoiceRepo } from "../infra/InvoiceRepo"
 import { InvoiceHydrator } from "./InvoiceHydrator"
 import { InvoiceApplier } from "./InvoiceApplier"
 import { createUuid, Uuid } from "../../packages/uuid/uuid.types"
-import { GoodRepo } from "../infra/goodRepo"
-import { IGood } from "../app/inEvents/IProductService"
+import { IGood } from "../app/inEvents/InvoiceGoodService"
 
 export type UnPricedOffer = {
   goodOffered: IGood
@@ -43,7 +42,6 @@ export class Invoice {
     private readonly event: InvoiceChangeEvents,
     private readonly applier: InvoiceApplier,
     private readonly hydrator: InvoiceHydrator,
-    private readonly goodRepo: GoodRepo,
     private readonly uuid: Uuid = createUuid,
   ) {}
   create(customerId: string) {

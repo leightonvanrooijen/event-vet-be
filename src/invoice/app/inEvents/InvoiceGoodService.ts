@@ -1,5 +1,5 @@
 import { Server } from "socket.io"
-import { EventHandler, IExternalEvents } from "./InEventHandler"
+import { EventHandler, IExternalEvents } from "./InvoiceInEventHandler"
 import { GoodRepo } from "../../infra/goodRepo"
 import { ChangeEvent } from "../../../packages/eventSourcing/changeEvent.types"
 
@@ -18,7 +18,7 @@ export type IGood = {
 
 export type IProductCreatedEvent = ChangeEvent<IProduct>
 
-export class IProductService implements EventHandler {
+export class InvoiceGoodService implements EventHandler {
   constructor(private readonly socket: Server, private readonly goodRepo: GoodRepo) {}
 
   async handle(event: IExternalEvents) {

@@ -4,7 +4,7 @@ import { InvoiceOffer, InvoiceOrder, InvoiceT, UnPricedOffer, UnPricedOrder } fr
 import { makeFakes } from "../../packages/eventSourcing/changeEvent.fake"
 import { InvoiceBilledEvent, InvoiceCreatedEvent, InvoiceOrderAddedEvent } from "./InvoiceChangeEvents"
 import { requestedOrderFake } from "../app/command/command.fake"
-import { IGood } from "../app/inEvents/IProductService"
+import { IGood } from "../app/inEvents/InvoiceGoodService"
 
 export const goodFake = (overrides?: Partial<Product>): IGood => ({
   id: faker.datatype.uuid(),

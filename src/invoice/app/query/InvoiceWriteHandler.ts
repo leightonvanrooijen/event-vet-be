@@ -50,6 +50,7 @@ export class InvoiceWriteHandler implements WriteHandlerT {
       version: event.version,
       orders: [...invoice.orders, event.data.order],
     })
+    console.log("invoice updated", invoice.id)
   }
 
   async applyBilled(event: Versioned<InvoiceBilledEvent>) {

@@ -1,6 +1,6 @@
 import { InvoiceService } from "../command/invoiceService"
 import { RequestedOffer, RequestedOrder } from "../command/command.types"
-import { EventHandler, IExternalEvents } from "./InEventHandler"
+import { EventHandler, IExternalEvents } from "./InvoiceInEventHandler"
 import { ChangeEvent } from "../../../packages/eventSourcing/changeEvent.types"
 import { ConsumedGood } from "../../../procedure/domain/procedure"
 
@@ -16,7 +16,7 @@ export type IProcedure = {
 }
 
 export type IProcedureFinishedEvent = ChangeEvent<IProcedure>
-export class IProcedureService implements EventHandler {
+export class InvoiceProcedureService implements EventHandler {
   constructor(private readonly invoiceService: InvoiceService) {}
 
   async handle(event: IExternalEvents) {

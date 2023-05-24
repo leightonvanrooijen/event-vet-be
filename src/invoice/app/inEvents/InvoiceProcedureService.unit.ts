@@ -1,6 +1,6 @@
 import { Thespian } from "thespian"
 import { InvoiceService } from "../command/invoiceService"
-import { IProcedureService } from "./IProcedureService"
+import { InvoiceProcedureService } from "./InvoiceProcedureService"
 import { faker } from "@faker-js/faker"
 import { match } from "mismatched"
 
@@ -27,7 +27,7 @@ describe("IProcedureService", () => {
       const thespian = new Thespian()
       const invoiceService = thespian.mock<InvoiceService>("InvoiceService")
 
-      const procedureService = new IProcedureService(invoiceService.object)
+      const procedureService = new InvoiceProcedureService(invoiceService.object)
 
       // TODO customer id is "123" as it is not set up
       // TODO replace match any with expected object
