@@ -1,7 +1,7 @@
 import { Thespian } from "thespian"
 import { Server } from "socket.io"
-import { fakeIProductCreatedEvent } from "./externalEvent.fake"
-import { ProductService } from "./productService"
+import { fakeIProductCreatedEvent } from "./inEvent.fake"
+import { IProductService } from "./IProductService"
 import { GoodRepo } from "../../infra/goodRepo"
 
 let thespian: Thespian
@@ -13,7 +13,7 @@ const setUp = () => {
   const goodRepo = thespian.mock<GoodRepo>()
   const socket = thespian.mock<Server>()
 
-  const productService = new ProductService(socket.object, goodRepo.object)
+  const productService = new IProductService(socket.object, goodRepo.object)
 
   return { productService, goodRepo, socket, event }
 }

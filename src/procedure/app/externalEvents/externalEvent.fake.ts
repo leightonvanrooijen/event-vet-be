@@ -12,6 +12,7 @@ export const fakeProductCreatedEvent = (overrides?: Partial<ProductCreatedEvent>
       name: faker.commerce.productName(),
       price: Number(faker.commerce.price()),
     },
+    version: 1,
     ...overrides,
   }
 }

@@ -1,5 +1,5 @@
-import { ExternalEventHandler } from "./externalEventHandler"
-import { fakeIProductCreatedEvent } from "./externalEvent.fake"
+import { InEventHandler } from "./InEventHandler"
+import { fakeIProductCreatedEvent } from "./inEvent.fake"
 
 describe("externalEventHandler", () => {
   // I could not get this to work with Thespian - I think it is because of the async nature for loop
@@ -9,7 +9,7 @@ describe("externalEventHandler", () => {
       handle: jest.fn(),
     }
 
-    const externalEventHandler = new ExternalEventHandler()
+    const externalEventHandler = new InEventHandler()
     externalEventHandler.addService(mockService)
     await externalEventHandler.handle([event])
 

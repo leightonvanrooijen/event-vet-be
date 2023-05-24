@@ -3,8 +3,8 @@ import { faker } from "@faker-js/faker"
 import { InvoiceOffer, InvoiceOrder, InvoiceT, UnPricedOffer, UnPricedOrder } from "./Invoice"
 import { makeFakes } from "../../packages/eventSourcing/changeEvent.fake"
 import { InvoiceBilledEvent, InvoiceCreatedEvent, InvoiceOrderAddedEvent } from "./InvoiceChangeEvents"
-import { IGood } from "../app/externalEvents/externalEventHandler"
 import { requestedOrderFake } from "../app/command/command.fake"
+import { IGood } from "../app/inEvents/IProductService"
 
 export const goodFake = (overrides?: Partial<Product>): IGood => ({
   id: faker.datatype.uuid(),

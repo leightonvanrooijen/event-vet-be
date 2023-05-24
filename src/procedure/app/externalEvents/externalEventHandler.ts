@@ -1,6 +1,7 @@
 import { Server } from "socket.io"
 import { ChangeEvent } from "../../../packages/eventSourcing/changeEvent.types"
 import { DataStore } from "../../../packages/db/testDB"
+import { VersionedChangeEvent } from "../../../packages/eventSourcing/testEventDb"
 
 export type Product = {
   id: string
@@ -14,7 +15,7 @@ export type Good = {
   type: "product"
 }
 
-export type ProductCreatedEvent = ChangeEvent<Product>
+export type ProductCreatedEvent = VersionedChangeEvent<Product>
 export type ExternalEvents = ChangeEvent<any>
 
 export const isProductCreatedEvent = (event: ExternalEvents): event is ProductCreatedEvent =>

@@ -4,7 +4,7 @@ import { InvoiceHydrator } from "./InvoiceHydrator"
 import { InvoiceApplier } from "./InvoiceApplier"
 import { createUuid, Uuid } from "../../packages/uuid/uuid.types"
 import { GoodRepo } from "../infra/goodRepo"
-import { IGood } from "../app/externalEvents/externalEventHandler"
+import { IGood } from "../app/inEvents/IProductService"
 
 export type UnPricedOffer = {
   goodOffered: IGood
