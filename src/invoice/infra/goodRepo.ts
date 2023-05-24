@@ -1,5 +1,5 @@
 import { DataStore } from "../../packages/db/testDB"
-import { IGood } from "../app/externalEvents/externalEventHandler"
+import { IGood } from "../app/externalEvents/InEventHandler"
 
 export class GoodRepo {
   constructor(private readonly goodRepo: DataStore<IGood>) {}

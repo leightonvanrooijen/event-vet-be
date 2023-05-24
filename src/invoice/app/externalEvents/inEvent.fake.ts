@@ -1,6 +1,6 @@
-import { IProductCreatedEvent } from "./externalEventHandler"
 import { faker } from "@faker-js/faker"
 import { makeFakes } from "../../../packages/eventSourcing/changeEvent.fake"
+import { IProductCreatedEvent } from "./IProductService"
 
 export const fakeIProductCreatedEvent = (overrides?: Partial<IProductCreatedEvent>): IProductCreatedEvent => {
   const id = overrides?.data?.id || faker.datatype.uuid()
