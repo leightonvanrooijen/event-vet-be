@@ -1,4 +1,4 @@
-import { Product } from "../../procedure/app/externalEvents/externalEventHandler"
+import { Product } from "../../procedure/app/externalEvents/PInEventHandler"
 import { faker } from "@faker-js/faker"
 import { InvoiceOffer, InvoiceOrder, InvoiceT, UnPricedOffer, UnPricedOrder } from "./Invoice"
 import { makeFakes } from "../../packages/eventSourcing/changeEvent.fake"

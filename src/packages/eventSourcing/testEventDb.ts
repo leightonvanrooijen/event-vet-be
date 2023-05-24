@@ -1,5 +1,5 @@
 import { ChangeEvent } from "./changeEvent.types"
-import { EventBroker } from "./eventBroker"
+import { EventBus } from "./eventBus"
 
 export type EventDb<Event extends Record<string, any>> = {
   saveEvents(events: Event[], expectedVersion: number): Promise<void>
@@ -11,7 +11,7 @@ export type EventStore<Event extends VersionedChangeEvent<any>> = Record<string,
 
 export class TestEventDb implements EventDb<VersionedChangeEvent<any>> {
   constructor(
-    private eventBroker: EventBroker = new EventBroker(),
+    private eventBroker: EventBus = new EventBus(),
     private store: EventStore<VersionedChangeEvent<any>> = {},
   ) {}
   async saveEvents(events, expectedVersion) {

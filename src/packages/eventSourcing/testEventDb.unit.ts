@@ -1,10 +1,10 @@
 import { ChangeEvent } from "./changeEvent.types"
 import { TestEventDb } from "./testEventDb"
 import { changeEventFakes, versionedChangeEventFakes } from "./changeEvent.fake"
-import { EventBroker } from "./eventBroker"
+import { EventBus } from "./eventBus"
 import { Thespian } from "thespian"
 
-const setUp = (defaultStore, eventBroker = new EventBroker()) => {
+const setUp = (defaultStore, eventBroker = new EventBus()) => {
   const testEventDb = new TestEventDb(eventBroker, defaultStore)
 
   return { testEventDb }
@@ -37,7 +37,7 @@ describe("buildTestEventDb", () => {
     })
     it("calls the event bus process with the saved events", async () => {
       const thespian = new Thespian()
-      const broker = thespian.mock<EventBroker>("handler")
+      const broker = thespian.mock<EventBus>("handler")
 
       const changeEvents = changeEventFakes()(2, overwrites)
 

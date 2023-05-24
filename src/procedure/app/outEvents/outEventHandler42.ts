@@ -3,7 +3,7 @@ import { ProcedureEvents } from "../../domain/procedure.changeEvents"
 type Handler = {
   handle: (events: ProcedureEvents[]) => Promise<void>
 }
-export class OutEventHandler {
+export class OutEventHandler42 {
   private readonly handlers: Handler[] = []
   constructor() {}
 

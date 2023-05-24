@@ -4,7 +4,7 @@ export interface Handler {
   handle(events: BrokerEvent[]): Promise<void>
 }
 
-export class EventBroker {
+export class EventBus {
   private handlers: Handler[] = []
   constructor() {}
 

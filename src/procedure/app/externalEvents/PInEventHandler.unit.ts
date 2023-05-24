@@ -1,8 +1,8 @@
-import { ExternalEventHandler, Good } from "./externalEventHandler"
+import { PInEventHandler, Good } from "./PInEventHandler"
 import { Thespian } from "thespian"
 import { Server } from "socket.io"
 import { DataStore } from "../../../packages/db/testDB"
-import { fakeProductCreatedEvent } from "./externalEvent.fake"
+import { fakeProductCreatedEvent } from "./pInEvent.fake"
 
 let thespian: Thespian
 const setUp = () => {
@@ -13,7 +13,7 @@ const setUp = () => {
   const goodRepo = thespian.mock<DataStore<Good>>()
   const socket = thespian.mock<Server>()
 
-  const externalEventHandler = new ExternalEventHandler(socket.object, goodRepo.object)
+  const externalEventHandler = new PInEventHandler(socket.object, goodRepo.object)
 
   return { externalEventHandler, goodRepo, socket, event }
 }

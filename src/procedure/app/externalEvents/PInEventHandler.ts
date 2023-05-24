@@ -21,7 +21,7 @@ export type ExternalEvents = ChangeEvent<any>
 export const isProductCreatedEvent = (event: ExternalEvents): event is ProductCreatedEvent =>
   event.type === "productCreated"
 
-export class ExternalEventHandler {
+export class PInEventHandler {
   constructor(private readonly socket: Server, private readonly goodRepo: DataStore<Good>) {}
 
   async handle(events: ExternalEvents[]) {

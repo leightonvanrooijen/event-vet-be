@@ -1,7 +1,7 @@
 import { Application } from "express"
 import { DataStore } from "../../../packages/db/testDB"
 import { ConsumedGood, TProcedure } from "../../domain/procedure"
-import { Good } from "../externalEvents/externalEventHandler"
+import { Good } from "../externalEvents/PInEventHandler"
 
 export class QueryApi {
   constructor(

@@ -8,7 +8,7 @@ import {
   ProcedureFinishedEvent,
 } from "../../domain/procedure.changeEvents"
 import { SocketIoNotifier } from "./socketIoNotifier"
-import { Handler } from "../../../packages/eventSourcing/eventBroker"
+import { Handler } from "../../../packages/eventSourcing/eventBus"
 import { Versioned } from "../../../packages/eventSourcing/applyVersion"
 // Todo this is quite brittle in terms of event ordering and blind application of events
 

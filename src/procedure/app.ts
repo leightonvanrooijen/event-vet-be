@@ -2,20 +2,27 @@ import express, { Application } from "express"
 import cors from "cors"
 import { Server } from "socket.io"
 import { ProcedureCommandApi } from "./app/command/command.api"
-import { EventBroker } from "../packages/eventSourcing/eventBroker"
-import { fakeProductCreatedEvents } from "./app/externalEvents/externalEvent.fake"
+import { EventBus } from "../packages/eventSourcing/eventBus"
+import { fakeProductCreatedEvents } from "./app/externalEvents/pInEvent.fake"
 import { ProcedureQueryFactory } from "./app/query/ProcedureQueryFactory"
 import { ProcedureCommandFactory } from "./app/command/procedureCommandFactory"
+import { Good, PInEventHandler } from "./app/externalEvents/PInEventHandler"
+import { TestDB } from "../packages/db/testDB"
 
-const setUpProcedureService = async (app: Application, io: Server, eventBroker: EventBroker) => {
+export const setUpProcedureService = async (app: Application, io: Server, eventBus: EventBus) => {
+  // External in events
+  const goodDb = new TestDB<Good>([], "id")
+  eventBus.registerHandler(new PInEventHandler(io, goodDb))
+
   // Query side
-  const writeHandler = await ProcedureQueryFactory.build(app, io, eventBroker)
+  const writeHandler = await ProcedureQueryFactory.build(app, io, goodDb)
 
-  // Register query event handler
-  eventBroker.registerHandler(writeHandler)
+  // Register write handler to receive events from command side
+  const internalEventBus = new EventBus()
+  internalEventBus.registerHandler(writeHandler)
 
   // Command side
-  const procedureCommand = ProcedureCommandFactory.build(eventBroker)
+  const procedureCommand = ProcedureCommandFactory.build(internalEventBus)
   new ProcedureCommandApi(app, procedureCommand).setUp()
 }
 
@@ -37,7 +44,7 @@ export const app = async (port = 4000) => {
   })
 
   // TODO separate internal and external events
-  const eventBroker = new EventBroker()
+  const eventBroker = new EventBus()
   await setUpProcedureService(app, io, eventBroker)
 
   await eventBroker.process(fakeProductCreatedEvents(20))

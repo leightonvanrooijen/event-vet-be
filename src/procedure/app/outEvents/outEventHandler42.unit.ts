@@ -1,11 +1,11 @@
-import { OutEventHandler } from "./outEventHandler"
+import { OutEventHandler42 } from "./outEventHandler42"
 import { goodConsumedEventFake } from "../../domain/procedure.fake"
 
 describe("OutEventHandler", () => {
   describe("handle", () => {
     it("calls each handler with the events", async () => {
       const handler1 = { handle: jest.fn() }
-      const outHandler = new OutEventHandler()
+      const outHandler = new OutEventHandler42()
 
       const events = goodConsumedEventFake()
       outHandler.register(handler1)

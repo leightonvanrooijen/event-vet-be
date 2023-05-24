@@ -1,4 +1,4 @@
-import { EventBroker } from "../../../packages/eventSourcing/eventBroker"
+import { EventBus } from "../../../packages/eventSourcing/eventBus"
 import { TestEventDb } from "../../../packages/eventSourcing/testEventDb"
 import { ProcedureRepo } from "../../infra/procedureRepo"
 import { ProcedureChangeEvents } from "../../domain/procedure.changeEvents"
@@ -8,7 +8,7 @@ import { Procedure } from "../../domain/procedure"
 import { ProcedureService } from "./procedureService"
 
 export class ProcedureCommandFactory {
-  static build(eventBroker: EventBroker) {
+  static build(eventBroker: EventBus) {
     const commandDb = new TestEventDb(eventBroker)
     const repo = new ProcedureRepo(commandDb)
     const event = new ProcedureChangeEvents()

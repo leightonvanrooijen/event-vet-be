@@ -1,4 +1,4 @@
-import { EventBroker, Handler } from "./eventBroker"
+import { EventBus, Handler } from "./eventBus"
 import { Thespian } from "thespian"
 
 describe("buildEventBroker", () => {
@@ -12,7 +12,7 @@ describe("buildEventBroker", () => {
       const thespian = new Thespian()
       const fakeHandler = thespian.mock<Handler>("handler")
       const fakeHandler2 = thespian.mock<Handler>("handler2")
-      const eventConsumer = new EventBroker()
+      const eventConsumer = new EventBus()
 
       fakeHandler.setup((s) => s.handle(fakeEvents)).returns(() => Promise.resolve())
       fakeHandler2.setup((s) => s.handle(fakeEvents)).returns(() => Promise.resolve())
